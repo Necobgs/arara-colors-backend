@@ -4,3 +4,9 @@ export class UserDto{
     email:string;
     password:string;
 }
+
+export interface FindAllParams{
+    id:number;
+    name:string;
+    email:string;
+}
