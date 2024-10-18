@@ -1,13 +1,13 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class Categories {
+export class OrderStatus {
 
     @PrimaryGeneratedColumn()
-    category_id:Number;
+    status_id:number;
 
     @Column()
-    category_name:string;
+    status_name:string;
 
     @Column()
     description:string;
