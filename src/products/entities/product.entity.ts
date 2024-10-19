@@ -20,7 +20,7 @@ export class Product {
     price:number;
 
     @OneToOne(() => Categories)
-    @JoinColumn()
+    @JoinColumn({name:'category_id'})
     category = Categories;
 
     @Column({type:'timestamp', default: ()=> 'CURRENT_TIMESTAMP'})

@@ -19,6 +19,6 @@ export class Order {
     total_amount:number;
 
     @OneToOne(()=>OrderStatus)
-    @JoinColumn()
+    @JoinColumn({name:'status_id'})
     status:OrderStatus
 }

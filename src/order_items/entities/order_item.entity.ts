@@ -9,11 +9,11 @@ export class OrderItem {
     order_item_id:number;
 
     @ManyToOne(()=>Order)
-    @JoinColumn()
+    @JoinColumn({name:'order_id'})
     order:Order;
 
     @ManyToOne(()=> Product)
-    @JoinColumn()
+    @JoinColumn({name:'product_id'})
     product:Product;
 
     @Column({type:'integer'})
