@@ -4,7 +4,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 export class Categories {
 
     @PrimaryGeneratedColumn()
-    category_id:Number;
+    category_id:number;
 
     @Column()
     category_name:string;

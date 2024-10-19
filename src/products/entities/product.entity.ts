@@ -1,5 +1,5 @@
 import { Categories } from "src/categories/entities/category.entity";
-import { Column, Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn, ManyToOne } from "typeorm";
 
 @Entity({name:'products'})
 export class Product {
@@ -16,12 +16,15 @@ export class Product {
     @Column()
     quantity_in_stock:number;
 
-    @Column({type:'decimal'})
+    @Column({type:'decimal',precision:10,scale:2})
     price:number;
 
-    @OneToOne(() => Categories)
+    @Column()
+    category_id:number;
+
+    @ManyToOne(() => Categories)
     @JoinColumn({name:'category_id'})
-    category = Categories;
+    category:Categories;
 
     @Column({type:'timestamp', default: ()=> 'CURRENT_TIMESTAMP'})
     created_at:Date;
