@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CustomersModule } from './customers/customers.module';
 import { OrderStatusModule } from './order_status/order_status.module';
 import { ProductsModule } from './products/products.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -45,7 +46,8 @@ import { ProductsModule } from './products/products.module';
     CategoriesModule,
     CustomersModule,
     OrderStatusModule,
-    ProductsModule],
+    ProductsModule,
+    OrdersModule],
   controllers: [AppController],
   providers: [AppService],
 })
