@@ -1,6 +1,6 @@
 import { Customers } from "src/customers/entities/customers.entity";
 import { OrderStatus } from "src/order_status/entities/order_status.entity";
-import { Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity()
@@ -19,5 +19,6 @@ export class Order {
     total_amount:number;
 
     @OneToOne(()=>OrderStatus)
+    @JoinColumn()
     status:OrderStatus
 }

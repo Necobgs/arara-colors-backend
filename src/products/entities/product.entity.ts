@@ -1,5 +1,5 @@
 import { Categories } from "src/categories/entities/category.entity";
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn, OneToOne } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn } from "typeorm";
 
 @Entity({name:'products'})
 export class Product {
@@ -20,15 +20,10 @@ export class Product {
     price:number;
 
     @OneToOne(() => Categories)
+    @JoinColumn()
     category = Categories;
 
     @Column({type:'timestamp', default: ()=> 'CURRENT_TIMESTAMP'})
     created_at:Date;
-
-
-    @BeforeInsert()
-    setCreatedAt(){
-        this.created_at = new Date()
-    }
     
 }
