@@ -7,15 +7,17 @@ export class Customers {
     customer_id:number
     
     @Column()
-    name:string
+    name:string;
 
     @Column()
-    email:string
+    password:string;
 
     @Column()
-    phone:string
+    email:string;
 
-    @Column()
-    addres:string
+    @Column({nullable:true})
+    phone:string;
 
+    @Column({nullable:true})
+    addres:string;
 }

@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Customers } from './entities/customers.entity';
@@ -12,11 +11,6 @@ export class CustomersService {
     @InjectRepository(Customers)
     private readonly repository:Repository<Customers>
   ){}
-
-  create(dto: CreateCustomerDto) {
-    const customer = this.repository.create(dto);
-    return this.repository.save(customer);
-  }
 
   findAll() {
     return this.repository.find();

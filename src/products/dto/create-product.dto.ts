@@ -22,4 +22,7 @@ export class CreateProductDto {
     @IsPositive()
     category_id:number;
 
+    @IsString()
+    image:string;
+
 }
