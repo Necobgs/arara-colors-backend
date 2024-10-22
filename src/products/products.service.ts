@@ -22,7 +22,7 @@ export class ProductsService {
 
   findAll(dto: SelectProductDto) {
     const query = this.repository.createQueryBuilder('products');
-    if(dto.price_gt && dto.price_lt && dto.price_gt > dto.price_lt) throw new HttpException('Preço mínimo deve ser menor que preço máximo',HttpStatus.BAD_REQUEST)
+    if(dto.price_gt && dto.price_lt && dto.price_gt > dto.price_lt) return new HttpException('Preço mínimo deve ser menor que preço máximo',HttpStatus.BAD_REQUEST)
 
     if(dto.category_id){
       query.andWhere("products.cateory_id = :category_id",{category_id:dto.category_id})

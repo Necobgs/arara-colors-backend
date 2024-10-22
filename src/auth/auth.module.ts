@@ -5,9 +5,21 @@ import { CustomersService } from 'src/customers/customers.service';
 import { CustomersModule } from 'src/customers/customers.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Customers } from 'src/customers/entities/customers.entity';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { CartModule } from 'src/cart/cart.module';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Customers])],
+  imports:[TypeOrmModule.forFeature([Customers]),
+            JwtModule.registerAsync({
+              inject:[ConfigService],
+              useFactory: (config:ConfigService) => ({
+                secret:config.get("JWT_SECRET"),
+                signOptions: { expiresIn: '2h' }
+              })
+            }),
+            CustomersModule,
+          CartModule],
   controllers: [AuthController],
   providers: [AuthService]
 })

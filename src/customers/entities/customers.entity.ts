@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Cart } from "src/cart/entities/cart.entity";
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Customers {
@@ -20,4 +21,7 @@ export class Customers {
 
     @Column({nullable:true})
     addres:string;
+
+    @OneToOne(()=> Cart, cart => cart.customer,{onDelete:'CASCADE'})
+    cart:Cart
 }

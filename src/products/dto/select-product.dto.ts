@@ -24,4 +24,5 @@ export class SelectProductDto extends PartialType(CreateProductDto){
     @IsPositive()
     @Type(()=>Number)
     qty_per_page:number;
+    
 }

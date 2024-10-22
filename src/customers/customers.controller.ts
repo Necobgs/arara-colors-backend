@@ -1,6 +1,7 @@
 import { Controller, Get, Body, Patch, Param, Delete } from '@nestjs/common';
 import { CustomersService } from './customers.service';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
+import { SelectCustomerDto } from './dto/select-customer.dto';
 
 @Controller('customers')
 export class CustomersController {
@@ -12,8 +13,8 @@ export class CustomersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.customersService.findOne(+id);
+  findOne(@Param('id') selectCustomerDto: SelectCustomerDto) {
+    return this.customersService.findOne(selectCustomerDto);
   }
 
   @Patch(':id')

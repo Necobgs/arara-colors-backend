@@ -18,3 +18,4 @@ export class UpdateCustomerDto{
     addres:string;
 
 }
+
