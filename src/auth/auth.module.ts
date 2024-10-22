@@ -8,9 +8,13 @@ import { Customers } from 'src/customers/entities/customers.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { CartModule } from 'src/cart/cart.module';
+import { PassportModule } from '@nestjs/passport';
+import { JwtStrategy } from './jwt.strategy';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Customers]),
+  imports:[
+    PassportModule,
+    TypeOrmModule.forFeature([Customers]),
             JwtModule.registerAsync({
               inject:[ConfigService],
               useFactory: (config:ConfigService) => ({
@@ -18,9 +22,10 @@ import { CartModule } from 'src/cart/cart.module';
                 signOptions: { expiresIn: '2h' }
               })
             }),
-            CustomersModule,
-          CartModule],
+    CustomersModule,
+    CartModule],
   controllers: [AuthController],
-  providers: [AuthService]
+  providers: [AuthService,JwtStrategy],
+  exports:[JwtStrategy]
 })
 export class AuthModule {}

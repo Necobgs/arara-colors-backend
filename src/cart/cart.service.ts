@@ -19,7 +19,8 @@ export class CartService {
   }
 
   findOne(customer_id: number) {
-    return this.repository.findOneBy({ customer_id });
+    return this.repository.find({ where:{customer_id},
+    relations:['cartItems'] });
   }
 
   async update(customer_id: number, dto: UpdateCartDto) {

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CardItemsController } from './card-items.controller';
+import { CardItemsController } from './cart-items.controller';
 import { CardItemsService } from './cart-items.service';
 
 describe('CardItemsController', () => {
