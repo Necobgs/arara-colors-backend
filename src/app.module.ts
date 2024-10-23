@@ -13,6 +13,7 @@ import { AuthModule } from './auth/auth.module';
 import { CartModule } from './cart/cart.module';
 import { CardItemsModule } from './card-items/cart-items.module';
 import { FavoritesModule } from './favorites/favorites.module';
+import { ProductImagesModule } from './product_images/product_images.module';
 
 @Module({
   imports: [
@@ -57,7 +58,8 @@ import { FavoritesModule } from './favorites/favorites.module';
     AuthModule,
     CartModule,
     CardItemsModule,
-    FavoritesModule],
+    FavoritesModule,
+    ProductImagesModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -1,4 +1,4 @@
-import { IsDate, IsDecimal, IsInt, IsNumber, IsPositive, IsString } from "class-validator";
+import { IsDate, IsDecimal, IsInt, IsNumber, IsPositive, IsString, Min } from "class-validator";
 import { Categories } from "src/categories/entities/category.entity";
 import { OneToOne } from "typeorm";
 
@@ -22,7 +22,7 @@ export class CreateProductDto {
     @IsPositive()
     category_id:number;
 
-    @IsString()
-    image:string;
-
+    @IsInt()
+    @Min(1)
+    installment_times:number
 }
