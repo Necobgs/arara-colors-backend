@@ -20,9 +20,20 @@ export class ProductsService {
     return this.repository.save(product);
   }
 
-  findAll(dto: SelectProductDto) {
+  findAll(dto: SelectProductDto,customer_id) {
     const query = this.repository.createQueryBuilder('products');
     if(dto.price_gt && dto.price_lt && dto.price_gt > dto.price_lt) return new HttpException('Preço mínimo deve ser menor que preço máximo',HttpStatus.BAD_REQUEST)
+
+    query.leftJoinAndSelect(
+      'favorites', 
+      'f', 
+      'f.product_id = products.id AND f.customer_id = :customer_id', 
+      { customer_id }
+    )
+    .addSelect(
+      'CASE WHEN f.product_id IS NOT NULL THEN true ELSE false END', 
+      'isFavorite'
+    );
 
     if(dto.category_id){
       query.andWhere("products.cateory_id = :category_id",{category_id:dto.category_id})

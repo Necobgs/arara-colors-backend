@@ -1,5 +1,6 @@
 import { Categories } from "src/categories/entities/category.entity";
-import { Column, Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn, ManyToOne } from "typeorm";
+import { Favorite } from "src/favorites/entities/favorite.entity";
+import { Column, Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn, ManyToOne, ManyToMany } from "typeorm";
 
 @Entity({name:'products'})
 export class Product {
@@ -25,7 +26,7 @@ export class Product {
     @ManyToOne(() => Categories)
     @JoinColumn({name:'category_id'})
     category:Categories;
-
+    
     @Column({type:'timestamp', default: ()=> 'CURRENT_TIMESTAMP'})
     created_at:Date;
 

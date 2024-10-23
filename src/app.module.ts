@@ -12,6 +12,7 @@ import { OrderItemsModule } from './order_items/order_items.module';
 import { AuthModule } from './auth/auth.module';
 import { CartModule } from './cart/cart.module';
 import { CardItemsModule } from './card-items/cart-items.module';
+import { FavoritesModule } from './favorites/favorites.module';
 
 @Module({
   imports: [
@@ -55,7 +56,8 @@ import { CardItemsModule } from './card-items/cart-items.module';
     OrderItemsModule,
     AuthModule,
     CartModule,
-    CardItemsModule],
+    CardItemsModule,
+    FavoritesModule],
   controllers: [AppController],
   providers: [AppService],
 })

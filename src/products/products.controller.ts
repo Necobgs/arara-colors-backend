@@ -3,6 +3,8 @@ import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { SelectProductDto } from './dto/select-product.dto';
+import { CurrentUser } from 'src/auth/current-user.decorator';
+import { CurrentUserDto } from 'src/auth/dto/current-user.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -14,8 +16,8 @@ export class ProductsController {
   }
 
   @Get()
-  findAll(@Query() selectProductDto:SelectProductDto) {
-    return this.productsService.findAll(selectProductDto);
+  findAll(@Query() selectProductDto:SelectProductDto,@CurrentUser() user:CurrentUserDto) {
+    return this.productsService.findAll(selectProductDto,user.userId);
   }
 
   @Get(':id')

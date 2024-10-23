@@ -1,5 +1,6 @@
 import { Cart } from "src/cart/entities/cart.entity";
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Favorite } from "src/favorites/entities/favorite.entity";
+import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Customers {
@@ -24,4 +25,7 @@ export class Customers {
 
     @OneToOne(()=> Cart, cart => cart.customer,{onDelete:'CASCADE'})
     cart:Cart
+
+    @OneToMany(()=> Favorite, favorite => favorite.customer,{onDelete:'CASCADE'})
+    favorite:Favorite[]
 }
