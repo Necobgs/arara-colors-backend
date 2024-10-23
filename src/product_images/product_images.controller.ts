@@ -12,14 +12,9 @@ export class ProductImagesController {
     return this.productImagesService.create(createProductImageDto);
   }
 
-  @Get()
-  findAll() {
-    return this.productImagesService.findAll();
-  }
-
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productImagesService.findOne(+id);
+  findAll(@Param('id') product_id:number) {
+    return this.productImagesService.findAll(product_id); 
   }
 
   @Patch(':id')

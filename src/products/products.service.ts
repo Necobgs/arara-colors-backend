@@ -23,6 +23,7 @@ export class ProductsService {
 
     // Validação de preços
     if (dto.price_gt && dto.price_lt && dto.price_gt > dto.price_lt) {
+      console.log(customer_id)
       return new HttpException(
         'Preço mínimo deve ser menor que preço máximo',
         HttpStatus.BAD_REQUEST,
@@ -34,11 +35,12 @@ export class ProductsService {
       .leftJoinAndSelect('products.category', 'category') // Junta a categoria
       .leftJoinAndSelect('products.productImages', 'productImages') // Junta as imagens do produto
       .leftJoinAndSelect(
-        'favorites',
+        'favorite',
         'f',
         'f.product_id = products.product_id AND f.customer_id = :customer_id',
         { customer_id },
       )
+
       .addSelect(
         'CASE WHEN f.product_id IS NOT NULL THEN true ELSE false END',
         'isFavorite',
@@ -66,7 +68,20 @@ export class ProductsService {
     query.offset((dto.page - 1) * dto.qty_per_page);
     query.limit(dto.qty_per_page);
 
-    return query.getMany();
+    return query.getRawMany().then(results => 
+      results.map(result => {
+        console.log(result)
+        // product_id: result.products_product_id,
+        // product_name: result.products_product_name,
+        // color_name: result.products_color_name,
+        // quantity_in_stock: result.products_quantity_in_stock,
+        // price: result.products_price,
+        // category_id: result.category_category_id,
+        // category_name: result.category_category_name,
+        // description: result.category_description,
+        // isFavorite: result.isFavorite,  
+        // Adicionando outros campos conforme necessário
+      }))
   }
 
   findOne(product_id: number) {

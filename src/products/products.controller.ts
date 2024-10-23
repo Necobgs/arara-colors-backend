@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { SelectProductDto } from './dto/select-product.dto';
 import { CurrentUser } from 'src/auth/current-user.decorator';
 import { CurrentUserDto } from 'src/auth/dto/current-user.dto';
+import { JwtAuthGuardOptional } from 'src/auth/jwt-authOptional.guard';
 
 @Controller('products')
 export class ProductsController {
@@ -16,6 +17,7 @@ export class ProductsController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuardOptional)
   findAll(@Query() selectProductDto:SelectProductDto,@CurrentUser() user:CurrentUserDto) {
     return this.productsService.findAll(selectProductDto,user.userId);
   }

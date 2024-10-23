@@ -11,6 +11,7 @@ export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   create(@Body() createFavoriteDto: CreateFavoriteDto,@CurrentUser() user:CurrentUserDto) {
     return this.favoritesService.create(createFavoriteDto,user.userId);
   }

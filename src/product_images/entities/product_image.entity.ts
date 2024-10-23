@@ -1,5 +1,5 @@
 import { Product } from "src/products/entities/product.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class ProductImage {
@@ -14,6 +14,7 @@ export class ProductImage {
     product_id:number
 
     @ManyToOne(()=>Product,product=>product.productImages)
+    @JoinColumn({name:'product_id'})
     product:Product
 
 }
