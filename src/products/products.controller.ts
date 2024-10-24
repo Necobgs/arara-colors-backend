@@ -19,14 +19,13 @@ export class ProductsController {
   @Get()
   @UseGuards(JwtAuthGuardOptional)
   findAll(@Query() selectProductDto:SelectProductDto,@CurrentUser() user:CurrentUserDto | null) {
-    console.log(user ? user.userId : null)
-    console.log(user)
     return this.productsService.findAll(selectProductDto,user ? user.userId : null);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productsService.findOne(+id);
+  @UseGuards(JwtAuthGuardOptional)
+  findOne(@Param('id') id: string,@CurrentUser() user:CurrentUserDto | null) {
+    return this.productsService.findOne(+id,user ? user.userId : null );
   }
 
   @Patch(':id')
