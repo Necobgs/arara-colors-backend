@@ -32,8 +32,8 @@ export class ProductsService {
     // Juntando as relações
     query
       .leftJoinAndSelect('products.category', 'category') // Junta a categoria
-      .leftJoinAndSelect('products.productImages', 'productImages'); // Junta as imagens do produto
-      
+      .leftJoinAndSelect('products.productImages', 'productImages') // Junta as imagens do produto
+      .leftJoinAndSelect('products.productFeature', 'productFeature');
       if(customer_id){
         query.leftJoinAndSelect(
           'favorite',
@@ -66,8 +66,8 @@ export class ProductsService {
     }
 
     // Paginação
-    query.offset((dto.page - 1) * dto.qty_per_page);
-    query.limit(dto.qty_per_page);
+    query.skip((dto.page-1)* dto.qty_per_page)
+         .take(dto.qty_per_page);
 
     if(customer_id){
       const products = await query.getRawAndEntities();

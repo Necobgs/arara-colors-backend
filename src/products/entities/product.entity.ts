@@ -1,6 +1,7 @@
 import { IsInt, IsNotEmpty, IsPositive, Min } from "class-validator";
 import { Categories } from "src/categories/entities/category.entity";
 import { Favorite } from "src/favorites/entities/favorite.entity";
+import { ProductFeature } from "src/product_features/entities/product_feature.entity";
 import { ProductImage } from "src/product_images/entities/product_image.entity";
 import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, ManyToOne, BeforeInsert, OneToMany } from "typeorm";
 
@@ -51,6 +52,9 @@ export class Product {
 
     @OneToMany(()=>Favorite,favorite=> favorite.product)
     favorite:Favorite[]
+
+    @OneToMany(()=>ProductFeature, productFeature => productFeature.product)
+    productFeature:ProductFeature[]
 
     @BeforeInsert()
     add_price_cash(){
