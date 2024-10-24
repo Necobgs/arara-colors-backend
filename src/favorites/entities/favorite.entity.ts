@@ -14,11 +14,11 @@ export class Favorite {
     @Column({type:'integer'})
     product_id:number;    
 
-    @ManyToOne(()=> Customers)
+    @ManyToOne(()=> Customers, customer=> customer.favorite)
     @JoinColumn()
     customer:Customers
 
-    @ManyToOne(()=>Product)
+    @ManyToOne(()=>Product,product=> product.favorite)
     @JoinColumn()
     product:Product
 }

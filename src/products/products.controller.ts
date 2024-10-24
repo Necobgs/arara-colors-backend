@@ -18,8 +18,10 @@ export class ProductsController {
 
   @Get()
   @UseGuards(JwtAuthGuardOptional)
-  findAll(@Query() selectProductDto:SelectProductDto,@CurrentUser() user:CurrentUserDto) {
-    return this.productsService.findAll(selectProductDto,user.userId);
+  findAll(@Query() selectProductDto:SelectProductDto,@CurrentUser() user:CurrentUserDto | null) {
+    console.log(user ? user.userId : null)
+    console.log(user)
+    return this.productsService.findAll(selectProductDto,user ? user.userId : null);
   }
 
   @Get(':id')

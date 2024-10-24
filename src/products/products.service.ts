@@ -18,7 +18,7 @@ export class ProductsService {
     return this.repository.save(product);
   }
 
-  findAll(dto: SelectProductDto, customer_id) {
+  async findAll(dto: SelectProductDto, customer_id) {
     const query = this.repository.createQueryBuilder('products');
 
     // Validação de preços
@@ -33,18 +33,21 @@ export class ProductsService {
     // Juntando as relações
     query
       .leftJoinAndSelect('products.category', 'category') // Junta a categoria
-      .leftJoinAndSelect('products.productImages', 'productImages') // Junta as imagens do produto
-      .leftJoinAndSelect(
-        'favorite',
-        'f',
-        'f.product_id = products.product_id AND f.customer_id = :customer_id',
-        { customer_id },
-      )
-
-      .addSelect(
-        'CASE WHEN f.product_id IS NOT NULL THEN true ELSE false END',
-        'isFavorite',
-      );
+      .leftJoinAndSelect('products.productImages', 'productImages'); // Junta as imagens do produto
+      
+      if(customer_id){
+        console.log('adicionou')
+        query.leftJoinAndSelect(
+          'favorite',
+          'f',
+          'f.product_id = products.product_id AND f.customer_id = :customer_id',
+          { customer_id },
+        )
+        .addSelect(
+          'CASE WHEN f.product_id IS NOT NULL THEN true ELSE false END',
+          'isFavorite',
+        )
+    }
 
     // Filtros
     if (dto.category_id) {
@@ -68,20 +71,20 @@ export class ProductsService {
     query.offset((dto.page - 1) * dto.qty_per_page);
     query.limit(dto.qty_per_page);
 
-    return query.getRawMany().then(results => 
-      results.map(result => {
-        console.log(result)
-        // product_id: result.products_product_id,
-        // product_name: result.products_product_name,
-        // color_name: result.products_color_name,
-        // quantity_in_stock: result.products_quantity_in_stock,
-        // price: result.products_price,
-        // category_id: result.category_category_id,
-        // category_name: result.category_category_name,
-        // description: result.category_description,
-        // isFavorite: result.isFavorite,  
-        // Adicionando outros campos conforme necessário
-      }))
+    if(customer_id){
+      const products = await query.getRawAndEntities();
+      const rawResults = products.raw;
+      const entities = products.entities;
+
+      const results = entities.map((entity, index) => {
+        const isFavorite = rawResults[index]?.isFavorite === 'true';
+        return { ...entity, isFavorite };
+      });
+
+      return results
+  }
+  return query.getMany()
+
   }
 
   findOne(product_id: number) {

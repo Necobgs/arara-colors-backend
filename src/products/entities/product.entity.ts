@@ -50,7 +50,7 @@ export class Product {
     productImages:ProductImage[]
 
     @OneToMany(()=>Favorite,favorite=> favorite.product)
-    favorite:Favorite
+    favorite:Favorite[]
 
     @BeforeInsert()
     add_price_cash(){
