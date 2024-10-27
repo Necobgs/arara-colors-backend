@@ -69,19 +69,30 @@ export class ProductsService {
     query.skip((dto.page-1)* dto.qty_per_page)
          .take(dto.qty_per_page);
 
-    if(customer_id){
-      const products = await query.getRawAndEntities();
-      const rawResults = products.raw;
-      const entities = products.entities;
-
-      const results = entities.map((entity, index) => {
-        const isFavorite = rawResults[index]?.isFavorite === 'true';
-        return { ...entity, isFavorite };
-      });
-
-      return results
-  }
-  return query.getMany()
+         if(customer_id){
+          const products = await query.getRawAndEntities();
+          const rawResults = products.raw;
+          const entities = products.entities;
+    
+          const results = entities.map((entity, index) => {
+            const isFavorite = rawResults[index]?.isFavorite === 'true';
+            return { ...entity, 
+                    isFavorite, 
+                    price: parseFloat(entity.price as any),
+                    price_cash: parseFloat(entity.price_cash as any)
+           };
+          });
+    
+          return results
+          }
+          const products = await query.getMany();
+    
+          // Mapeia os produtos para converter `price` e `price_cash` para números
+          return products.map((product) => ({
+              ...product,
+              price: parseFloat(product.price as any),
+              price_cash: parseFloat(product.price_cash as any),
+          }));
 
   }
 
@@ -111,12 +122,24 @@ export class ProductsService {
 
       const results = entities.map((entity, index) => {
         const isFavorite = rawResults[index]?.isFavorite === 'true';
-        return { ...entity, isFavorite };
+        return { ...entity, 
+                isFavorite, 
+                price: parseFloat(entity.price as any),
+                price_cash: parseFloat(entity.price_cash as any)
+       };
       });
 
       return results
       }
-    return query.getMany()
+      const products = await query.getMany();
+
+      // Mapeia os produtos para converter `price` e `price_cash` para números
+      return products.map((product) => ({
+          ...product,
+          price: parseFloat(product.price as any),
+          price_cash: parseFloat(product.price_cash as any),
+      }));
+  
   }
 
   async update(product_id: number, dto: UpdateProductDto) {
