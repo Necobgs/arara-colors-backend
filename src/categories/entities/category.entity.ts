@@ -11,4 +11,7 @@ export class Categories {
 
     @Column()
     description:string;
+
+    @Column()
+    category_icon:string;
 }

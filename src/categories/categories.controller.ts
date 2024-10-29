@@ -14,13 +14,13 @@ export class CategoriesController {
   }
 
   @Get()
-  @HttpCode(HttpStatus.FOUND)
+  @HttpCode(HttpStatus.OK)
   findAll() {
     return this.categoriesService.findAll();
   }
 
   @Get(':id')
-  @HttpCode(HttpStatus.FOUND)
+  @HttpCode(HttpStatus.OK)
   findOne(@Param('id') id: string) {
     return this.categoriesService.findOne(+id);
   }
