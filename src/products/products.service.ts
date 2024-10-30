@@ -116,9 +116,9 @@ export class ProductsService {
     }
     query.where('products.product_id = :product_id',{product_id:product_id})
     if(customer_id){
-      const products = await query.getRawAndEntities();
-      const rawResults = products.raw;
-      const entities = products.entities;
+      const product = await query.getRawAndEntities()[0];
+      const rawResults = product.raw;
+      const entities = product.entities;
 
       const results = entities.map((entity, index) => {
         const isFavorite = rawResults[index]?.isFavorite === 'true';
@@ -131,16 +131,17 @@ export class ProductsService {
 
       return results
       }
-      const products = await query.getMany();
+      const product = await query.getOne();
 
       // Mapeia os produtos para converter `price` e `price_cash` para números
-      return products.map((product) => ({
-          ...product,
-          price: parseFloat(product.price as any),
-          price_cash: parseFloat(product.price_cash as any),
-      }));
-  
+      return {
+        ...product,
+        price: parseFloat(product.price as any),
+        price_cash: parseFloat(product.price_cash as any),
+    };
   }
+  
+
 
   async update(product_id: number, dto: UpdateProductDto) {
     const product = await this.repository.findOneBy({ product_id });
