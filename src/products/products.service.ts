@@ -18,7 +18,7 @@ export class ProductsService {
     return this.repository.save(product);
   }
 
-  async findAll(dto: SelectProductDto, customer_id) {
+  async findAll(dto: SelectProductDto, customer_id?:number) {
     const query = this.repository.createQueryBuilder('products');
 
     // Validação de preços
@@ -32,8 +32,7 @@ export class ProductsService {
     // Juntando as relações
     query
       .leftJoinAndSelect('products.category', 'category') // Junta a categoria
-      .leftJoinAndSelect('products.productImages', 'productImages') // Junta as imagens do produto
-      .leftJoinAndSelect('products.productFeature', 'productFeature');
+      .leftJoinAndSelect('products.productImages', 'productImages');
       if(customer_id){
         query.leftJoinAndSelect(
           'favorite',
@@ -100,8 +99,9 @@ export class ProductsService {
     const query = this.repository.createQueryBuilder('products');
     query
       .leftJoinAndSelect('products.category', 'category') // Junta a categoria
-      .leftJoinAndSelect('products.productImages', 'productImages'); // Junta as imagens do produto
-      
+      .leftJoinAndSelect('products.productImages', 'productImages') // Junta as imagens do produto
+      .leftJoinAndSelect('products.productFeature', 'productFeature');
+
       if(customer_id){
         query.leftJoinAndSelect(
           'favorite',
