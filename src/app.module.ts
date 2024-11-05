@@ -22,34 +22,23 @@ import { ProductFeaturesModule } from './product_features/product_features.modul
       isGlobal:true,
       envFilePath:".env"
     }),
-    TypeOrmModule.forRoot({
-      type:'postgres',
-      host:'localhost',
-      port:5432,
-      database:'arara_colors',
-      username:'postgres',
-      password:'papagaio',
-      entities:[__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize:true
+    TypeOrmModule.forRootAsync({
+      imports:[ConfigModule],
+      inject:[ConfigService],
+      useFactory: (configsService: ConfigService) => ({
+        type:"postgres",
+        host:configsService.get<string>('DATABASE_HOST'),
+        port:configsService.get<number>('DATABASE_PORT'),
+        username:configsService.get<string>('DATABASE_USERNAME'),
+        password:configsService.get<string>('DATABASE_PASSWORD'),
+        database:configsService.get<string>('DATABASE_NAME'),
+        ssl:{
+          rejectUnauthorized:true 
+        },
+        entities:[__dirname + '/**/*.entity{.ts,.js}'], //Carrega todas as entidades do diretório
+        synchronize:true
+      }),
     }),
-
-    // TypeOrmModule.forRootAsync({
-    //   imports:[ConfigModule],
-    //   inject:[ConfigService],
-    //   useFactory: (configsService: ConfigService) => ({
-    //     type:"postgres",
-    //     host:configsService.get<string>('DATABASE_HOST'),
-    //     port:configsService.get<number>('DATABASE_PORT'),
-    //     username:configsService.get<string>('DATABASE_USERNAME'),
-    //     password:configsService.get<string>('DATABASE_PASSWORD'),
-    //     database:configsService.get<string>('DATABASE_NAME'),
-    //     ssl:{
-    //       rejectUnauthorized:false
-    //     },
-    //     entities:[__dirname + '/**/*.entity{.ts,.js}'], //Carrega todas as entidades do diretório
-    //     synchronize:true
-    //   }),
-    // }),
     CategoriesModule,
     CustomersModule,
     OrderStatusModule,
