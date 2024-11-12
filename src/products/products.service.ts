@@ -18,12 +18,12 @@ export class ProductsService {
     return this.repository.save(product);
   }
 
-  async findAll(dto: SelectProductDto, customer_id?:number) {
+  async findAll(dto: SelectProductDto, customer_id?: number) {
     const query = this.repository.createQueryBuilder('products');
 
     // Validação de preços
     if (dto.price_gt && dto.price_lt && dto.price_gt > dto.price_lt) {
-      return new HttpException(
+      throw new HttpException(
         'Preço mínimo deve ser menor que preço máximo',
         HttpStatus.BAD_REQUEST,
       );
@@ -31,10 +31,12 @@ export class ProductsService {
 
     // Juntando as relações
     query
-      .leftJoinAndSelect('products.category', 'category') // Junta a categoria
+      .leftJoinAndSelect('products.category', 'category')
       .leftJoinAndSelect('products.productImages', 'productImages');
-      if(customer_id){
-        query.leftJoinAndSelect(
+
+    if (customer_id) {
+      query
+        .leftJoinAndSelect(
           'favorite',
           'f',
           'f.product_id = products.product_id AND f.customer_id = :customer_id',
@@ -43,7 +45,7 @@ export class ProductsService {
         .addSelect(
           'CASE WHEN f.product_id IS NOT NULL THEN true ELSE false END',
           'isFavorite',
-        )
+        );
     }
 
     // Filtros
@@ -64,46 +66,57 @@ export class ProductsService {
       query.andWhere('products.price < :price_lt', { price_lt: dto.price_lt });
     }
 
+    // Calcula o total de produtos para paginação
+    const totalProducts = await query.getCount();
+
     // Paginação
-    query.skip((dto.page-1)* dto.qty_per_page)
-         .take(dto.qty_per_page);
+    query.skip((dto.page - 1) * dto.qty_per_page).take(dto.qty_per_page);
 
-         if(customer_id){
-          const products = await query.getRawAndEntities();
-          const rawResults = products.raw;
-          const entities = products.entities;
-    
-          const results = entities.map((entity, index) => {
-            const isFavorite = rawResults[index]?.isFavorite === 'true';
-            return { ...entity, 
-                    isFavorite, 
-                    price: parseFloat(entity.price as any),
-                    price_cash: parseFloat(entity.price_cash as any)
-           };
-          });
-    
-          return results
-          }
-          const products = await query.getMany();
-    
-          // Mapeia os produtos para converter `price` e `price_cash` para números
-          return products.map((product) => ({
-              ...product,
-              price: parseFloat(product.price as any),
-              price_cash: parseFloat(product.price_cash as any),
-          }));
+    if (customer_id) {
+      const products = await query.getRawAndEntities();
+      const rawResults = products.raw;
+      const entities = products.entities;
 
+      const results = entities.map((entity, index) => {
+        const isFavorite = rawResults[index]?.isFavorite === 'true';
+        return {
+          ...entity,
+          isFavorite,
+          price: parseFloat(entity.price as any),
+          price_cash: parseFloat(entity.price_cash as any),
+        };
+      });
+
+      return {
+        data: results,
+        totalProducts,
+        totalPages: Math.ceil(totalProducts / dto.qty_per_page),
+      };
+    }
+
+    const products = await query.getMany();
+
+    return {
+      data: products.map((product) => ({
+        ...product,
+        price: parseFloat(product.price as any),
+        price_cash: parseFloat(product.price_cash as any),
+      })),
+      totalProducts,
+      totalPages: Math.ceil(totalProducts / dto.qty_per_page),
+    };
   }
 
-  async findOne(product_id: number,customer_id?:number) {
+  async findOne(product_id: number, customer_id?: number) {
     const query = this.repository.createQueryBuilder('products');
     query
-      .leftJoinAndSelect('products.category', 'category') // Junta a categoria
-      .leftJoinAndSelect('products.productImages', 'productImages') // Junta as imagens do produto
+      .leftJoinAndSelect('products.category', 'category')
+      .leftJoinAndSelect('products.productImages', 'productImages')
       .leftJoinAndSelect('products.productFeature', 'productFeature');
 
-      if(customer_id){
-        query.leftJoinAndSelect(
+    if (customer_id) {
+      query
+        .leftJoinAndSelect(
           'favorite',
           'f',
           'f.product_id = products.product_id AND f.customer_id = :customer_id',
@@ -112,36 +125,34 @@ export class ProductsService {
         .addSelect(
           'CASE WHEN f.product_id IS NOT NULL THEN true ELSE false END',
           'isFavorite',
-        )
+        );
     }
-    query.where('products.product_id = :product_id',{product_id:product_id})
-    if(customer_id){
-      const product = await query.getRawAndEntities()[0];
+    query.where('products.product_id = :product_id', { product_id });
+
+    if (customer_id) {
+      const product = await query.getRawAndEntities();
       const rawResults = product.raw;
       const entities = product.entities;
 
-      const results = entities.map((entity, index) => {
+      return entities.map((entity, index) => {
         const isFavorite = rawResults[index]?.isFavorite === 'true';
-        return { ...entity, 
-                isFavorite, 
-                price: parseFloat(entity.price as any),
-                price_cash: parseFloat(entity.price_cash as any)
-       };
-      });
+        return {
+          ...entity,
+          isFavorite,
+          price: parseFloat(entity.price as any),
+          price_cash: parseFloat(entity.price_cash as any),
+        };
+      })[0];
+    }
 
-      return results
-      }
-      const product = await query.getOne();
+    const product = await query.getOne();
 
-      // Mapeia os produtos para converter `price` e `price_cash` para números
-      return {
-        ...product,
-        price: parseFloat(product.price as any),
-        price_cash: parseFloat(product.price_cash as any),
+    return {
+      ...product,
+      price: parseFloat(product.price as any),
+      price_cash: parseFloat(product.price_cash as any),
     };
   }
-  
-
 
   async update(product_id: number, dto: UpdateProductDto) {
     const product = await this.repository.findOneBy({ product_id });
